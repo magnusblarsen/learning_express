@@ -1,4 +1,5 @@
 # DETTE ER EN TEST
 
-this is a test
 og dette er en ændring
+Dette er endnu en ændring
+endnu en ændring
