@@ -1,45 +1,47 @@
-const expess = require('express');
-const res = require('express/lib/response');
-const {products} = require('./data')
+const express = require('express');
+const { send } = require('express/lib/response');
+const app = express();
+let {people} = require('./data')
+
+//static assets
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended:false}))
+app.use(express.json())
 
 
-const app = expess();
 
-app.get('/', (req, res)=>{
-    res.send('<h1>Home Page</h1><a href="/api/products">Products</a>');
+app.get('/api/people', (req,res)=>{
+    res.status(200).json({success:true, data:people})
 })
 
-app.get('/api/products', (req,res)=>{
-    const productsMinusDescription = products.map((product)=>{
-        const {id, name, image} = product;
-        return {id,name,image};
-    })
-    
-    res.json(productsMinusDescription)
-})
-
-app.get('/api/products/:productID', (req,res)=>{
-    //console.log(req.params);
-
-    const {productID} = req.params;
-
-    const singleProduct = products.find(
-        (product)=> product.id === Number(productID));
-    
-    if(!singleProduct){
-        
-        return res.status(404).send('product does not exist')
+app.post('/api/people',(req,res)=>{
+    const {name} = req.body
+    if(!name){
+        return res.status(400).json({success:false,msg:'please provide name values'})
     }
-
-    return res.json(singleProduct)
+    res.status(201).json({success:true,person:name})
 })
 
-app.get('/api/products/:productID/reviews/:reviewID', (req,res)=>{
-    console.log(req.params);
-    res.send('hello')
+app.post('/api/postman/people', (req,res)=>{
+    const {name} = req.body
+    if(!name){
+        return res
+            .status(400)
+            .json({success:false,msg:'please provide name values'})
+    }
+    res.status(201).json({success:true,data:[...people, name]})
+})
+
+app.post('/login', (req,res)=>{
+    const {name} = req.body;
+    if(name){
+        return res.status(200).send(`welcome ${name}`)
+    }
+    res.status(401).send('Please provide morejeowisjroweijr')
 
 })
 
-app.listen(5000, (req, res) => {
-    console.log('Server is listening on port 5000...');
+app.listen(5000, (req,res)=>{
+    console.log('listening on port 5000...');
 })
+
