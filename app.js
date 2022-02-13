@@ -1,48 +1,65 @@
 const express = require('express');
+<<<<<<< HEAD
 const expess = require('express');
 const res = require('express/lib/response');
 const {people} = require('./data')
+=======
+const { send } = require('express/lib/response');
+const app = express();
+let {people} = require('./data')
+>>>>>>> a928fb2e0d4de2dc9967605ef377b62d73ff9d54
+
+//static assets
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended:false}))
+app.use(express.json())
 
 
-const app = expess();
-
+<<<<<<< HEAD
 app.use(express.json())
 
 app.get('/', (req, res)=>{
     res.send('<h1>Home Page</h1><a href="/api/products">Products</a>');
 })
+=======
+>>>>>>> a928fb2e0d4de2dc9967605ef377b62d73ff9d54
 
-app.get('/api/products', (req,res)=>{
-    const productsMinusDescription = products.map((product)=>{
-        const {id, name, image} = product;
-        return {id,name,image};
-    })
-    
-    res.json(productsMinusDescription)
+app.get('/api/people', (req,res)=>{
+    res.status(200).json({success:true, data:people})
 })
 
-app.get('/api/products/:productID', (req,res)=>{
-    //console.log(req.params);
-
-    const {productID} = req.params;
-
-    const singleProduct = products.find(
-        (product)=> product.id === Number(productID));
-    
-    if(!singleProduct){
-        
-        return res.status(404).send('product does not exist')
+app.post('/api/people',(req,res)=>{
+    const {name} = req.body
+    if(!name){
+        return res.status(400).json({success:false,msg:'please provide name values'})
     }
-
-    return res.json(singleProduct)
+    res.status(201).json({success:true,person:name})
 })
 
-app.get('/api/products/:productID/reviews/:reviewID', (req,res)=>{
-    console.log(req.params);
-    res.send('hello')
+app.post('/api/postman/people', (req,res)=>{
+    const {name} = req.body
+    if(!name){
+        return res
+            .status(400)
+            .json({success:false,msg:'please provide name values'})
+    }
+    res.status(201).json({success:true,data:[...people, name]})
+})
+
+app.post('/login', (req,res)=>{
+    const {name} = req.body;
+    if(name){
+        return res.status(200).send(`welcome ${name}`)
+    }
+    res.status(401).send('Please provide morejeowisjroweijr')
 
 })
 
+app.listen(5000, (req,res)=>{
+    console.log('listening on port 5000...');
+})
+
+<<<<<<< HEAD
 app.put('/api/people/:id', (req,res)=>{
     const {id} = req.params
     const {name} = req.body
@@ -78,3 +95,5 @@ app.delete('api/people/:id', (req,res)=>{
 app.listen(5000, (req, res) => {
     console.log('Server is listening on port 5000...');
 })
+=======
+>>>>>>> a928fb2e0d4de2dc9967605ef377b62d73ff9d54
